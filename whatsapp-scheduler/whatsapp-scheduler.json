@@ -1,0 +1,551 @@
+{
+  "name": "WhatsappScheduler",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Disparador de mensagem",
+        "height": 541,
+        "width": 1905,
+        "color": 2
+      },
+      "id": "5e9fc998-fb91-417e-b745-114c0ec27e3d",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -880,
+        752
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "nocoDbApiToken",
+        "version": 2,
+        "operation": "update",
+        "projectId": "pyczfkwf4p1fwer",
+        "table": "mgdniewdnuy7k4i",
+        "id": "={{ $('Loop').item.json.Id }}",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldName": "Status de Envio",
+              "fieldValue": "Erro"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.nocoDb",
+      "typeVersion": 3,
+      "position": [
+        624,
+        1104
+      ],
+      "id": "d5061223-15e8-4431-8772-450ff0a422b9",
+      "name": "Status erro",
+      "credentials": {
+        "nocoDbApiToken": {
+          "id": "Cv06x6PvFX4OBsbA",
+          "name": "david.prw@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "nocoDbApiToken",
+        "version": 2,
+        "operation": "update",
+        "projectId": "pyczfkwf4p1fwer",
+        "table": "mgdniewdnuy7k4i",
+        "id": "={{ $('Loop').item.json.Id }}",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldName": "Status de Envio",
+              "fieldValue": "Enviado"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.nocoDb",
+      "typeVersion": 3,
+      "position": [
+        624,
+        912
+      ],
+      "id": "19d095a3-2244-4159-baa9-1932db0a9d3e",
+      "name": "Status enviado",
+      "credentials": {
+        "nocoDbApiToken": {
+          "id": "Cv06x6PvFX4OBsbA",
+          "name": "david.prw@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "nocoDbApiToken",
+        "operation": "getAll",
+        "projectId": "pyczfkwf4p1fwer",
+        "table": "mgdniewdnuy7k4i",
+        "returnAll": true,
+        "options": {
+          "where": "=(Data,eq,exactDate,{{ $json.data_atual }})~and(Hora,eq,{{ $json.hora_atual }})~and(Status de Envio,eq,Pendente)"
+        }
+      },
+      "type": "n8n-nodes-base.nocoDb",
+      "typeVersion": 3,
+      "position": [
+        -208,
+        912
+      ],
+      "id": "cf0946b9-7c4b-4da5-bd30-a3baf2c5b2eb",
+      "name": "Filtra registros",
+      "credentials": {
+        "nocoDbApiToken": {
+          "id": "Cv06x6PvFX4OBsbA",
+          "name": "david.prw@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 1
+            }
+          ]
+        }
+      },
+      "id": "5f3fb551-6403-470b-8876-719e5d4a5726",
+      "name": "Schedule",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -832,
+        912
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ad0c4c19-95e6-4a08-8504-6ffa266f1fc2",
+              "name": "data_atual",
+              "value": "={{ DateTime.now().setZone('America/Sao_Paulo').toFormat('yyyy-LL-dd') }}",
+              "type": "string"
+            },
+            {
+              "id": "993826da-a6b8-4b0c-98a4-000bb87e06c6",
+              "name": "hora_atual",
+              "value": "={{ DateTime.now().setZone('America/Sao_Paulo').toFormat('HH:mm') }}",
+              "type": "string"
+            },
+            {
+              "id": "e2e2ee2a-d71a-4750-b00b-f87e7152b513",
+              "name": "id_planilha",
+              "value": "SEU_ID_DA_PLANILHA",
+              "type": "string"
+            },
+            {
+              "id": "e6f2e123-eaa3-45d1-bdef-96cc25465d85",
+              "name": "evo_url",
+              "value": "SUA_URL_EVOLUTION_API",
+              "type": "string"
+            },
+            {
+              "id": "cfc7bef6-3ebd-49f2-84fb-218afe76b5eb",
+              "name": "evo_instancia",
+              "value": "SUA_INSTANCIA_EVOLUTION_API",
+              "type": "string"
+            },
+            {
+              "id": "401a0dcf-69f1-405c-8bf4-3de37c3f87df",
+              "name": "evo_apikey",
+              "value": "SUA_API_KEY_EVOLUTION_API",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "97ae8c57-b1a9-4a62-a288-0e484624dfc2",
+      "name": "Parâmetros iniciais",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        -416,
+        912
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Capturar id dos grupos",
+        "height": 253,
+        "width": 1905
+      },
+      "id": "917ecc01-99bd-44c3-a027-dc268195903f",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -880,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "url": "SUA_URL_EVOLUTION_API",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "SUA_API_KEY_EVOLUTION_API"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "4a3d06ce-e39c-470a-b692-431cfc8a2613",
+      "name": "Listar grupos",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        -624,
+        560
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "3e32c690-e4fd-4e02-884f-279b6dfae6a9",
+      "name": "Espera 5 segundos",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        832,
+        1008
+      ],
+      "webhookId": "20176f09-88c5-4352-a7b5-7a8ac4c2626e"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "4263b44e-5dc5-4487-af48-f96b69f68ad3",
+      "name": "Loop",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        0,
+        912
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "SEU_EMAIL_DE_NOTIFICACAO",
+        "subject": "✅ Whatsapp schedule executado!",
+        "message": "=As mensagens agendadas do whatsapp foram enviadas!\n<br>\n<br>\n🔗 <b>LINK:</b><br>\nLINK_DA_SUA_TABELA\n<br>\n<br>\nAtenciosamente,<br>\n<i>Mensagem enviada automáticamente</i> 🤖",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "5eeb0efb-cca0-4f6a-a839-ab3a848285ed",
+      "name": "Envia e-mail",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        208,
+        800
+      ],
+      "executeOnce": true,
+      "webhookId": "79f7ae11-9113-492e-b631-46b2d6db503c",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "lcqvR8bFe1oEsgmf",
+          "name": "[Gmail] david.prw@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "outputFieldName": "data_atual",
+        "options": {}
+      },
+      "id": "c11d8f19-bfaf-4247-b10b-2dbeb244183f",
+      "name": "Data e Hora",
+      "type": "n8n-nodes-base.dateTime",
+      "typeVersion": 2,
+      "position": [
+        -624,
+        912
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "24a8c0e7-cb47-451c-8353-854ee11d6143",
+              "name": "mensagem_json",
+              "value": "={{ $json.Mensagem.replace(/\\n/g, \"\\\\n\") }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "b7368c2b-afff-4f6b-a479-7add70fe91ce",
+      "name": "Formata texto json",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        208,
+        1008
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Parâmetros iniciais').item.json.evo_url }}/message/sendText/{{ $('Parâmetros iniciais').item.json.evo_instancia }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $('Parâmetros iniciais').item.json.evo_apikey }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"number\": \"{{ $('Loop').item.json._nc_m2m_Agendamento_Contatos[0].Contatos['WhatsApp / ID Grupo'] }}\",\n    \"text\": \"{{ $json.mensagem_json }}\",\n    \"delay\": 2000\n}",
+        "options": {}
+      },
+      "id": "1678439f-d4da-413b-9cd4-7c416b6c86a5",
+      "name": "Envia mensagem",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        416,
+        1008
+      ],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -832,
+        560
+      ],
+      "id": "25060f6a-9d53-4ec4-9df0-791d07357cb2",
+      "name": "Manual"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "f7e475f7-f9f2-48a3-9439-4ad3d6be7beb",
+              "leftValue": "={{ $json.subject }}",
+              "rightValue": "SEU_FILTRO_AQUI",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "7a1b464d-2615-4e50-bb2b-eb383959e37c",
+      "name": "Filtra grupo",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [
+        -416,
+        560
+      ],
+      "executeOnce": false
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule": {
+      "main": [
+        [
+          {
+            "node": "Data e Hora",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parâmetros iniciais": {
+      "main": [
+        [
+          {
+            "node": "Filtra registros",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Listar grupos": {
+      "main": [
+        [
+          {
+            "node": "Filtra grupo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Status erro": {
+      "main": [
+        [
+          {
+            "node": "Espera 5 segundos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Status enviado": {
+      "main": [
+        [
+          {
+            "node": "Espera 5 segundos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtra registros": {
+      "main": [
+        [
+          {
+            "node": "Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Espera 5 segundos": {
+      "main": [
+        [
+          {
+            "node": "Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop": {
+      "main": [
+        [
+          {
+            "node": "Envia e-mail",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Formata texto json",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data e Hora": {
+      "main": [
+        [
+          {
+            "node": "Parâmetros iniciais",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formata texto json": {
+      "main": [
+        [
+          {
+            "node": "Envia mensagem",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Envia mensagem": {
+      "main": [
+        [
+          {
+            "node": "Status enviado",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Status erro",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manual": {
+      "main": [
+        [
+          {
+            "node": "Listar grupos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "d6731441-0fc5-49f5-afb1-2ba407da7d6a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "33738330930e3881dd5571eca013f36ddf8aab20e4ea5c1f2ebaf4a2b4668ac6"
+  },
+  "id": "CNp3qK9M8m3B7SGN",
+  "tags": [
+    {
+      "updatedAt": "2025-04-16T23:51:30.640Z",
+      "createdAt": "2025-04-16T23:51:30.640Z",
+      "id": "eGrhErX9XUHQ8Y3t",
+      "name": "🚀 Produção"
+    }
+  ]
+}
