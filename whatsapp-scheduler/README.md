@@ -1,4 +1,4 @@
-# WhatsApp Scheduler
+# 📅 WhatsApp Scheduler
 
 <div align="left">
 
@@ -12,7 +12,7 @@ Este workflow agenda e envia mensagens de WhatsApp automaticamente com base em u
 
 A ideia é simples: você cadastra cobranças, lembretes ou avisos na base de dados com data e hora. O n8n roda a cada 1 minuto, verifica o que está pendente e dispara no horário certo.
 
-## Como funciona
+## ⚙️ Como funciona
 
 1. O nó `Schedule` dispara o fluxo a cada 1 minuto.
 2. O nó `Data e Hora` + `Parâmetros iniciais` monta a data/hora atual no fuso `America/Sao_Paulo`.
@@ -29,7 +29,7 @@ A ideia é simples: você cadastra cobranças, lembretes ou avisos na base de da
 
 Se não existir mensagem para o minuto atual, o fluxo não envia nada e finaliza.
 
-## Pré-requisitos
+## ✅ Pré-requisitos
 
 - n8n ativo (self-hosted ou cloud)
 - Evolution API instalada e funcionando no seu servidor
@@ -38,7 +38,7 @@ Se não existir mensagem para o minuto atual, o fluxo não envia nada e finaliza
   - `nocoDbApiToken`
   - `gmailOAuth2` (opcional, se quiser manter notificação por e-mail)
 
-## Base de dados (NocoDB)
+## 🗂️ Base de dados (NocoDB)
 
 O fluxo original usa NocoDB, mas pode ser adaptado para Google Sheets sem problema.
 
@@ -56,7 +56,7 @@ Observação:
 - No JSON atual, o destino da mensagem está vindo de um relacionamento do NocoDB (`_nc_m2m_Agendamento_Contatos[0].Contatos['WhatsApp / ID Grupo']`).
 - Se você usar a coluna direta `Contato / Grupo` do CSV, ajuste o nó `Envia mensagem` para ler esse campo em vez do relacionamento.
 
-## Configuração rápida
+## 🚀 Configuração rápida
 
 No nó `Parâmetros iniciais`, ajuste:
 
@@ -75,7 +75,7 @@ No nó `Envia e-mail` (opcional):
 - `sendTo`
 - `LINK_DA_SUA_TABELA`
 
-## Capturar ID de grupos (fluxo auxiliar)
+## 👥 Capturar ID de grupos (fluxo auxiliar)
 
 Este workflow também tem um trecho manual para ajudar a descobrir grupos:
 
@@ -85,13 +85,13 @@ Você pode usar esse caminho para listar grupos da API e filtrar pelo nome (`sub
 
 Com esse ID em mãos, também é possível agendar mensagens para grupos de WhatsApp (não apenas para contatos individuais).
 
-## Status usados
+## 📌 Status usados
 
 - `Pendente`: aguardando horário
 - `Enviado`: disparo concluído com sucesso
 - `Erro`: tentativa falhou
 
-## Adaptação para Google Sheets
+## 📄 Adaptação para Google Sheets
 
 Se quiser usar Google Planilhas:
 
@@ -99,7 +99,7 @@ Se quiser usar Google Planilhas:
 - Mantenha a mesma lógica de filtros por data/hora/status.
 - Mantenha a atualização de status após envio.
 
-## Observações importantes
+## ⚠️ Observações importantes
 
 - O agendamento é por minuto. A `Hora` deve bater exatamente com o minuto atual.
 - O fuso usado no fluxo é `America/Sao_Paulo`.

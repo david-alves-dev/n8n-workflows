@@ -1,0 +1,172 @@
+{
+  "name": "[Agência] Agente - Extrair Primeiro Nome",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "de2564c8-a599-415b-98db-32ffdfae055b",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        128,
+        -144
+      ],
+      "id": "44a3f149-3703-436c-9f99-d70648fe1ec1",
+      "name": "1. Webhook",
+      "webhookId": "de2564c8-a599-415b-98db-32ffdfae055b"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "844372a3-13dc-45c4-acd1-df6fe23f5ebc",
+              "name": "chatInput",
+              "value": "={{ $json.body.nome }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        336,
+        -144
+      ],
+      "id": "49534fd6-6c3f-4036-8c17-76efb52a7379",
+      "name": "1. Parâmetros iniciais"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        880,
+        -144
+      ],
+      "id": "217eef20-39ff-4aca-847a-b1c62991f3ab",
+      "name": "1. Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=## Objetivo\nExtraia **apenas o primeiro nome** do usuário a partir de uma ou mais mensagens de texto.\n\n## Instruções\n- Analise o conteúdo textual fornecido pelo usuário.\n- O texto pode conter saudações, perguntas, ou frases como \"meu nome é...\", \"sou o...\", \"me chamo...\", entre outras variações.\n- Pode haver várias mensagens ou apenas uma.\n\n## Sua Tarefa\nRetorne **apenas o primeiro nome próprio** da pessoa mencionada no texto, ignorando qualquer palavra extra ou contexto irrelevante.\nSe o nome estiver completo, como \"José Santos\", retorne apenas \"José\".\nSe o nome estiver no meio de uma frase, como \"Oi, meu nome é Ana Paula\", retorne \"Ana\".\n\n## O que não fazer\n- Não retorne sobrenomes.\n- Não inclua saudações, emojis, ou qualquer texto além do primeiro nome.\n- Não explique sua resposta.\n\n## Exemplo de entradas e saídas:\n\n**Entrada:**  \n\"Olá, tudo bem? Me chamo Rafael Lima.\"  \n**Saída:**  \nRafael\n\n**Entrada:**  \n\"Sou a Fernanda\"  \n**Saída:**  \nFernanda\n\n**Entrada:**  \n\"Meu nome é João Pedro da Silva\"  \n**Saída:**  \nJoão\n\n**Entrada:**  \n\"Oi\"  \n**Saída:**  \n(Se não houver nome, retorne uma string vazia)"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        544,
+        -144
+      ],
+      "id": "6c97f8aa-34de-473a-b666-733b8c504103",
+      "name": "Extrator de Primeiro Nome"
+    },
+    {
+      "parameters": {
+        "content": "## Extrair primeiro nome\nO objetivo aqui é processar toda a mensagem do usuário para extrair o primeiro nome e seguir com a automação no typebot.",
+        "height": 468,
+        "width": 1012,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        80,
+        -256
+      ],
+      "id": "cdf8783a-2312-401d-8bab-3ac38facef15",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "gpt-4o"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        480,
+        64
+      ],
+      "id": "cd147a0e-7c7d-4936-b932-a6b67e4fc4a1",
+      "name": "1. GPT-4o",
+      "credentials": {
+        "openAiApi": {
+          "id": "X0e4gvL6vxqKZHVL",
+          "name": "david.prw@gmail.com"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "1. Webhook": {
+      "main": [
+        [
+          {
+            "node": "1. Parâmetros iniciais",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "1. Parâmetros iniciais": {
+      "main": [
+        [
+          {
+            "node": "Extrator de Primeiro Nome",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extrator de Primeiro Nome": {
+      "main": [
+        [
+          {
+            "node": "1. Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "1. GPT-4o": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Extrator de Primeiro Nome",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "e7f1563c-fbd2-444a-bcb8-91e051abf472",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "33738330930e3881dd5571eca013f36ddf8aab20e4ea5c1f2ebaf4a2b4668ac6"
+  },
+  "id": "MQf9B1qCoeTSEGa1",
+  "tags": []
+}
